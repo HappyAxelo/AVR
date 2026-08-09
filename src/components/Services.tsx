@@ -1,5 +1,5 @@
 import Reveal from './Reveal'
-import { siteContent } from '../data/mock'
+import { useT } from '../i18n'
 
 const icons = [
   // crosshair
@@ -23,21 +23,23 @@ const icons = [
 ]
 
 export default function Services() {
+  const t = useT()
+
   return (
-    <section id="services" className="bg-paper py-24 sm:py-32" aria-label="Services">
+    <section id="services" className="bg-paper py-24 sm:py-32" aria-label={t.services.eyebrow}>
       <div className="mx-auto max-w-6xl px-5 sm:px-8">
         <Reveal>
           <p className="text-xs font-semibold uppercase tracking-[0.25em] text-terrace/70">
-            Services
+            {t.services.eyebrow}
           </p>
           <h2 className="mt-3 max-w-xl text-3xl font-semibold text-terrace sm:text-5xl">
-            What we fly for you.
+            {t.services.title}
           </h2>
-          <p className="mt-4 max-w-xl text-ink/65">{siteContent.services_intro}</p>
+          <p className="mt-4 max-w-xl text-ink/65">{t.services.intro}</p>
         </Reveal>
 
         <div className="mt-14 grid gap-5 sm:grid-cols-2">
-          {siteContent.services.map((s, i) => (
+          {t.services.items.map((s, i) => (
             <Reveal key={s.title} delay={i * 0.08}>
               <article className="group h-full rounded-2xl border border-terrace/10 bg-white/60 p-7 transition duration-300 hover:border-terrace/25 hover:shadow-lg hover:shadow-terrace/5">
                 <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-terrace text-volt">

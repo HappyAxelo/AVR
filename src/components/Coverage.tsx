@@ -1,19 +1,14 @@
 import Reveal from './Reveal'
-import { siteContent } from '../data/mock'
+import { useT } from '../i18n'
 
 /**
  * Simplified outline of Rwanda, plotted from national border coordinates
  * (roughly 28.9–30.9°E, 1.05–2.84°S) and flattened to a clean cartographic
  * silhouette. Illustrative, not survey-accurate.
  */
-function RwandaMap() {
+function RwandaMap({ label }: { label: string }) {
   return (
-    <svg
-      viewBox="0 0 400 340"
-      className="w-full max-w-md"
-      role="img"
-      aria-label="Illustrative map of Rwanda showing the AVR base in Kigali"
-    >
+    <svg viewBox="0 0 400 340" className="w-full max-w-md" role="img" aria-label={label}>
       {/* national outline */}
       <path
         d="M111 101 L148 83 L208 74 L292 33 L351 78 L362 132 L349 193 L342 239
@@ -56,28 +51,25 @@ function RwandaMap() {
 }
 
 export default function Coverage() {
+  const t = useT()
+
   return (
     <section
       id="coverage"
       className="bg-terrace-dark py-24 text-paper sm:py-32"
-      aria-label="Coverage"
+      aria-label={t.coverage.eyebrow}
     >
       <div className="mx-auto grid max-w-6xl items-center gap-14 px-5 sm:px-8 lg:grid-cols-2">
         <Reveal>
-          <p className="text-xs font-semibold uppercase tracking-[0.25em] text-volt">Coverage</p>
-          <h2 className="mt-3 text-3xl font-semibold sm:text-5xl">
-            Rwandan terrain, flown by a Rwandan team.
-          </h2>
-          <p className="mt-4 max-w-md leading-relaxed text-paper/65">
-            {siteContent.coverage_intro}
+          <p className="text-xs font-semibold uppercase tracking-[0.25em] text-volt">
+            {t.coverage.eyebrow}
           </p>
-          <p className="mt-4 max-w-md leading-relaxed text-paper/65">
-            Drones are calibrated, repaired and supported in-country. We work directly with
-            cooperatives across districts.
-          </p>
+          <h2 className="mt-3 text-3xl font-semibold sm:text-5xl">{t.coverage.title}</h2>
+          <p className="mt-4 max-w-md leading-relaxed text-paper/65">{t.coverage.p1}</p>
+          <p className="mt-4 max-w-md leading-relaxed text-paper/65">{t.coverage.p2}</p>
         </Reveal>
         <Reveal delay={0.1} className="flex justify-center lg:justify-end">
-          <RwandaMap />
+          <RwandaMap label={t.coverage.mapLabel} />
         </Reveal>
       </div>
     </section>

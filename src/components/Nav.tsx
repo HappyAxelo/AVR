@@ -1,21 +1,24 @@
 import { useEffect, useState } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { Link, useLocation } from 'react-router-dom'
-
-const links = [
-  { href: '/#services', label: 'Services' },
-  { href: '/#how', label: 'How it works' },
-  { href: '/#impact', label: 'Impact' },
-  { href: '/#coverage', label: 'Coverage' },
-  { href: '/news', label: 'News' },
-]
+import LanguageSwitcher from './LanguageSwitcher'
+import { useT } from '../i18n'
 
 export default function Nav() {
   const [scrolled, setScrolled] = useState(false)
   const [open, setOpen] = useState(false)
   const { pathname } = useLocation()
   const reduceMotion = useReducedMotion()
+  const t = useT()
   const overHero = pathname === '/'
+
+  const links = [
+    { href: '/#services', label: t.nav.services },
+    { href: '/#how', label: t.nav.how },
+    { href: '/work', label: t.nav.work },
+    { href: '/#impact', label: t.nav.impact },
+    { href: '/news', label: t.nav.news },
+  ]
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40)
@@ -24,7 +27,6 @@ export default function Nav() {
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
-  // Close the menu on route change, and on Escape
   useEffect(() => setOpen(false), [pathname])
   useEffect(() => {
     if (!open) return
@@ -48,12 +50,12 @@ export default function Nav() {
         <Link
           to="/"
           className="font-display text-xl font-bold tracking-tight text-paper"
-          aria-label="AVR — Ampere Vision Rwanda, home"
+          aria-label={t.nav.home}
         >
           AVR<span className="text-volt">.</span>
         </Link>
 
-        <ul className="hidden items-center gap-7 md:flex">
+        <ul className="hidden items-center gap-6 lg:flex">
           {links.map((l) => (
             <li key={l.href}>
               {l.href.startsWith('/#') ? (
@@ -75,20 +77,21 @@ export default function Nav() {
           ))}
         </ul>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5 sm:gap-2">
+          <LanguageSwitcher className="hidden sm:block" />
           <a
             href="/#contact"
             className="rounded-full bg-volt px-4 py-2 text-sm font-semibold text-terrace transition hover:brightness-110 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-volt"
           >
-            Book a spray
+            {t.nav.book}
           </a>
           <button
             type="button"
             onClick={() => setOpen((v) => !v)}
             aria-expanded={open}
             aria-controls="mobile-menu"
-            aria-label={open ? 'Close menu' : 'Open menu'}
-            className="-mr-2 flex h-10 w-10 items-center justify-center rounded-lg text-paper transition hover:bg-paper/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-volt md:hidden"
+            aria-label={open ? t.nav.closeMenu : t.nav.openMenu}
+            className="-mr-2 flex h-10 w-10 items-center justify-center rounded-lg text-paper transition hover:bg-paper/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-volt lg:hidden"
           >
             <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
               {open ? (
@@ -109,7 +112,7 @@ export default function Nav() {
             animate={{ height: 'auto', opacity: 1 }}
             exit={reduceMotion ? undefined : { height: 0, opacity: 0 }}
             transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
-            className="overflow-hidden border-t border-paper/10 bg-terrace md:hidden"
+            className="overflow-hidden border-t border-paper/10 bg-terrace lg:hidden"
           >
             <ul className="mx-auto max-w-6xl px-5 py-4 sm:px-8">
               {links.map((l) => (
@@ -133,6 +136,9 @@ export default function Nav() {
                   )}
                 </li>
               ))}
+              <li className="mt-3 border-t border-paper/10 pt-4 sm:hidden">
+                <LanguageSwitcher />
+              </li>
             </ul>
           </motion.div>
         )}

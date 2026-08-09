@@ -7,7 +7,7 @@ import {
 } from 'framer-motion'
 import DroneSvg from './DroneSvg'
 import SprayCanvas from './SprayCanvas'
-import { siteContent } from '../data/mock'
+import { useT } from '../i18n'
 
 /** Layered terrace contours drawn as SVG — placeholder until real footage arrives. */
 function Terraces() {
@@ -52,6 +52,7 @@ function Terraces() {
 export default function Hero() {
   const ref = useRef<HTMLElement>(null)
   const reduceMotion = useReducedMotion()
+  const t = useT()
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ['start start', 'end start'],
@@ -67,7 +68,7 @@ export default function Hero() {
     <section
       ref={ref}
       className="relative flex min-h-svh flex-col overflow-hidden bg-terrace text-paper"
-      aria-label="Introduction"
+      aria-label={t.hero.eyebrow}
     >
       {/* soft sky glow */}
       <div
@@ -91,7 +92,7 @@ export default function Hero() {
             transition={{ duration: 0.6 }}
             className="mb-5 text-xs font-semibold uppercase tracking-[0.25em] text-volt"
           >
-            Ampere Vision Rwanda
+            {t.hero.eyebrow}
           </motion.p>
           <motion.h1
             initial={reduceMotion ? false : { opacity: 0, y: 18 }}
@@ -99,7 +100,7 @@ export default function Hero() {
             transition={{ duration: 0.7, delay: 0.08 }}
             className="text-[2.6rem] leading-[1.05] font-semibold sm:text-6xl lg:text-7xl"
           >
-            {siteContent.hero_headline}
+            {t.hero.headline}
           </motion.h1>
           <motion.p
             initial={reduceMotion ? false : { opacity: 0, y: 18 }}
@@ -107,7 +108,7 @@ export default function Hero() {
             transition={{ duration: 0.7, delay: 0.18 }}
             className="mt-6 max-w-xl text-lg leading-relaxed text-paper/75"
           >
-            {siteContent.hero_subline}
+            {t.hero.subline}
           </motion.p>
           <motion.div
             initial={reduceMotion ? false : { opacity: 0 }}
@@ -119,13 +120,13 @@ export default function Hero() {
               href="#contact"
               className="rounded-full bg-volt px-7 py-3.5 font-semibold text-terrace transition hover:brightness-110 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-volt"
             >
-              {siteContent.hero_cta}
+              {t.hero.cta}
             </a>
             <a
               href="#how"
               className="text-sm font-medium text-paper/70 underline decoration-paper/30 underline-offset-4 transition hover:text-paper"
             >
-              How it works
+              {t.hero.secondary}
             </a>
           </motion.div>
         </div>

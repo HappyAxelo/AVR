@@ -2,6 +2,7 @@ import Nav from '../components/Nav'
 import Hero from '../components/Hero'
 import Services from '../components/Services'
 import HowItWorks from '../components/HowItWorks'
+import SelectedWork from '../components/SelectedWork'
 import Impact from '../components/Impact'
 import Coverage from '../components/Coverage'
 import NewsSection from '../components/NewsSection'
@@ -17,6 +18,7 @@ export default function Home() {
         <Hero />
         <Services />
         <HowItWorks />
+        <SelectedWork />
         <Impact />
         <Coverage />
         <NewsSection />

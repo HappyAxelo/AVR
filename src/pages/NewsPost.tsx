@@ -3,9 +3,11 @@ import Nav from '../components/Nav'
 import Footer from '../components/Footer'
 import { formatDate } from '../components/NewsSection'
 import { newsPosts } from '../data/mock'
+import { useI18n } from '../i18n'
 
 export default function NewsPost() {
   const { slug } = useParams()
+  const { t, locale } = useI18n()
   const post = newsPosts.find((p) => p.slug === slug && p.status === 'published')
 
   if (!post) {
@@ -13,9 +15,9 @@ export default function NewsPost() {
       <>
         <Nav />
         <main className="mx-auto flex min-h-screen max-w-2xl flex-col items-center justify-center px-5 text-center">
-          <h1 className="text-3xl font-semibold text-terrace">Article not found</h1>
+          <h1 className="text-3xl font-semibold text-terrace">{t.news.notFound}</h1>
           <Link to="/news" className="mt-6 underline decoration-terrace/40 underline-offset-4">
-            All news
+            {t.news.back}
           </Link>
         </main>
         <Footer />
@@ -31,14 +33,14 @@ export default function NewsPost() {
           to="/news"
           className="text-sm font-medium text-terrace/70 transition hover:text-terrace"
         >
-          ← All news
+          {t.news.back}
         </Link>
         <article className="mt-8">
           <time
             dateTime={post.published_at}
             className="text-xs font-medium uppercase tracking-wider text-ink/60"
           >
-            {formatDate(post.published_at)}
+            {formatDate(post.published_at, locale)}
           </time>
           <h1 className="mt-3 text-3xl font-semibold leading-tight text-terrace sm:text-5xl">
             {post.title}

@@ -1,6 +1,9 @@
 // Mock content shaped like the future Supabase tables (site_content, news_posts).
 // Phase 3 replaces these exports with live queries; keys stay identical.
-// All facts come from the AVR pitch deck. [CONFIRM] marks unverified copy.
+//
+// Translated marketing copy lives in src/i18n/*. This file holds facts and
+// figures that do not change with language, plus news article content.
+// All figures come from the AVR pitch deck. [CONFIRM] marks unverified copy.
 
 export interface NewsPost {
   id: string
@@ -13,86 +16,25 @@ export interface NewsPost {
   published_at: string
 }
 
-export const siteContent = {
-  hero_headline: "Precision spraying, flown for Rwanda's fields.",
-  hero_subline:
-    'Half the input. Same protection. Licensed pilots apply crop protection by drone — less chemical, less water, less time.',
-  hero_cta: 'Book a spray',
-
-  services_intro:
-    'One team, one booking. We bring the drone, the pilots and the maintenance. You bring the land.',
-  services: [
-    {
-      title: 'Crop protection spraying',
-      line: 'Targeted pesticide application that cuts spray cost per hectare by about half.',
-    },
-    {
-      title: 'Fertiliser & biopesticide application',
-      line: 'Even coverage on terraced and flat land, calibrated to your crop.',
-    },
-    {
-      title: 'Larviciding',
-      line: 'Precise treatment of breeding sites to control mosquito larvae.',
-    },
-    {
-      title: 'Mapping & scouting [CONFIRM]',
-      line: 'GPS plot maps and crop health checks before and after spraying.',
-    },
-  ],
-
-  how_intro: 'From booking to spraying in four steps.',
-  how_steps: [
-    {
-      title: 'Book',
-      line: 'Cooperatives and farms schedule by phone or SMS.',
-    },
-    {
-      title: 'Map',
-      line: 'We GPS-map your plot and plan the flight path.',
-    },
-    {
-      title: 'Calibrate',
-      line: 'The drone is set up for your chosen product and target pest.',
-    },
-    {
-      title: 'Spray',
-      line: 'Licensed pilots apply with precision under RCAA authority.',
-    },
-  ],
-
-  impact_intro:
-    'Knapsack sprayers lose up to 50% of pesticide to drift. Drones put it on the crop.',
-  stats: [
-    { value: 50, suffix: '%', label: 'lower spray cost per hectare' },
-    { value: 350000, suffix: ' RWF', label: 'saved per 5 ha per season' },
-    { value: 120, suffix: '+', label: 'flight hours logged in the field' },
-    { value: 107, suffix: ' ha', label: 'sprayed on real farms' },
-    { value: 350, suffix: '', label: 'early-adopter farmers' },
-    { value: 3, suffix: '', label: 'cooperative partners' },
-  ],
-  credentials: [
-    'RCAA-licensed pilots',
-    'BVLOS-cleared [CONFIRM exact wording]',
-    'MINAGRI-recognised',
-    'IEEE peer-reviewed research',
-    'AYuTe Africa Challenge Rwanda 2025 — 2nd runner-up',
-    'ACEIoT incubation — Startups Capital grant winner',
-  ],
-
-  coverage_intro:
-    'Based in Kigali. Flying with cooperative partners across Rwanda. [CONFIRM regions served]',
-
-  contact_phone: '[CONFIRM phone]',
-  contact_whatsapp: '[CONFIRM WhatsApp number]',
-  contact_email: '[CONFIRM email]',
-  contact_address: 'Kigali, Rwanda [CONFIRM address]',
-
-  newsletter_line:
-    'Field notes, spray-season reminders and company news. A few emails a season, no more.',
-
-  footer_licence:
-    'Operating under Rwanda Civil Aviation Authority licence. [CONFIRM licence number and wording]',
+/** Contact details, confirmed by AVR. */
+export const contact = {
+  phone: '0792 437 462',
+  /** E.164 for the WhatsApp deep link — same number as above. */
+  phoneE164: '250792437462',
+  whatsapp: '0792 437 462',
+  email: 'amperevisionrwanda@gmail.com',
+  address: 'Nyarugenge District, Kigali, Rwanda',
 }
+
+/** Stat values. Labels are translated in src/i18n/*, in this same order. */
+export const stats = [
+  { value: 50, suffix: '%' },
+  { value: 350000, suffix: ' RWF' },
+  { value: 120, suffix: '+' },
+  { value: 107, suffix: ' ha' },
+  { value: 350, suffix: '' },
+  { value: 3, suffix: '' },
+]
 
 export const newsPosts: NewsPost[] = [
   {

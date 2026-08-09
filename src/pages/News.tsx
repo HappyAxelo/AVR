@@ -3,8 +3,11 @@ import Nav from '../components/Nav'
 import Footer from '../components/Footer'
 import { formatDate } from '../components/NewsSection'
 import { newsPosts } from '../data/mock'
+import { useI18n } from '../i18n'
 
 export default function News() {
+  const { t, locale } = useI18n()
+
   const published = newsPosts
     .filter((p) => p.status === 'published')
     .sort((a, b) => b.published_at.localeCompare(a.published_at))
@@ -13,8 +16,10 @@ export default function News() {
     <>
       <Nav />
       <main className="mx-auto min-h-screen max-w-4xl px-5 pb-24 pt-32 sm:px-8">
-        <p className="text-xs font-semibold uppercase tracking-[0.25em] text-terrace/70">News</p>
-        <h1 className="mt-3 text-4xl font-semibold text-terrace sm:text-5xl">From the field.</h1>
+        <p className="text-xs font-semibold uppercase tracking-[0.25em] text-terrace/70">
+          {t.news.eyebrow}
+        </p>
+        <h1 className="mt-3 text-4xl font-semibold text-terrace sm:text-5xl">{t.news.title}</h1>
 
         <div className="mt-12 space-y-5">
           {published.map((post) => (
@@ -27,12 +32,12 @@ export default function News() {
                   dateTime={post.published_at}
                   className="text-xs font-medium uppercase tracking-wider text-ink/60"
                 >
-                  {formatDate(post.published_at)}
+                  {formatDate(post.published_at, locale)}
                 </time>
                 <h2 className="mt-2 text-2xl font-semibold text-terrace">{post.title}</h2>
                 <p className="mt-2 max-w-2xl leading-relaxed text-ink/60">{post.excerpt}</p>
                 <span className="mt-4 inline-block text-sm font-medium text-terrace/70 transition group-hover:text-terrace">
-                  Read article →
+                  {t.news.read} →
                 </span>
               </Link>
             </article>

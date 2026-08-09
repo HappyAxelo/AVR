@@ -1,10 +1,11 @@
 import { useState } from 'react'
 import type { FormEvent } from 'react'
 import Reveal from './Reveal'
-import { siteContent } from '../data/mock'
+import { useT } from '../i18n'
 
 export default function Newsletter() {
   const [done, setDone] = useState(false)
+  const t = useT()
 
   const onSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -13,17 +14,15 @@ export default function Newsletter() {
   }
 
   return (
-    <section className="border-t border-terrace/10 bg-paper py-20 sm:py-24" aria-label="Newsletter">
+    <section className="border-t border-terrace/10 bg-paper py-20 sm:py-24" aria-label={t.newsletter.title}>
       <div className="mx-auto max-w-3xl px-5 text-center sm:px-8">
         <Reveal>
-          <h2 className="text-2xl font-semibold text-terrace sm:text-4xl">
-            Notes from the field, straight to you.
-          </h2>
-          <p className="mx-auto mt-3 max-w-md text-ink/60">{siteContent.newsletter_line}</p>
+          <h2 className="text-2xl font-semibold text-terrace sm:text-4xl">{t.newsletter.title}</h2>
+          <p className="mx-auto mt-3 max-w-md text-ink/65">{t.newsletter.intro}</p>
 
           {done ? (
             <p className="mt-8 font-medium text-terrace" role="status">
-              Check your inbox — confirm your email to finish subscribing.
+              {t.newsletter.success}
             </p>
           ) : (
             <form
@@ -31,7 +30,7 @@ export default function Newsletter() {
               className="mx-auto mt-8 flex max-w-md flex-col gap-3 sm:flex-row"
             >
               <label htmlFor="nl-email" className="sr-only">
-                Email address
+                {t.contact.email}
               </label>
               <input
                 id="nl-email"
@@ -39,14 +38,14 @@ export default function Newsletter() {
                 type="email"
                 required
                 autoComplete="email"
-                placeholder="you@example.com"
+                placeholder={t.newsletter.placeholder}
                 className="w-full flex-1 rounded-full border border-terrace/20 bg-white px-5 py-3 text-ink placeholder:text-ink/55 focus:border-terrace focus:outline-none"
               />
               <button
                 type="submit"
                 className="rounded-full bg-terrace px-6 py-3 font-semibold text-paper transition hover:bg-terrace-light focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terrace"
               >
-                Subscribe
+                {t.newsletter.submit}
               </button>
             </form>
           )}

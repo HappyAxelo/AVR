@@ -1,21 +1,21 @@
 import Reveal from './Reveal'
-import { siteContent } from '../data/mock'
+import { useT } from '../i18n'
 
 export default function HowItWorks() {
+  const t = useT()
+
   return (
-    <section id="how" className="bg-terrace py-24 text-paper sm:py-32" aria-label="How it works">
+    <section id="how" className="bg-terrace py-24 text-paper sm:py-32" aria-label={t.how.eyebrow}>
       <div className="mx-auto max-w-6xl px-5 sm:px-8">
         <Reveal>
           <p className="text-xs font-semibold uppercase tracking-[0.25em] text-volt">
-            How it works
+            {t.how.eyebrow}
           </p>
-          <h2 className="mt-3 max-w-xl text-3xl font-semibold sm:text-5xl">
-            {siteContent.how_intro}
-          </h2>
+          <h2 className="mt-3 max-w-xl text-3xl font-semibold sm:text-5xl">{t.how.title}</h2>
         </Reveal>
 
         <ol className="mt-16 grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
-          {siteContent.how_steps.map((step, i) => (
+          {t.how.steps.map((step, i) => (
             <Reveal key={step.title} delay={i * 0.1}>
               <li className="relative">
                 <span
@@ -26,7 +26,7 @@ export default function HowItWorks() {
                 </span>
                 <h3 className="mt-3 text-xl font-semibold">{step.title}</h3>
                 <p className="mt-2 leading-relaxed text-paper/65">{step.line}</p>
-                {i < siteContent.how_steps.length - 1 && (
+                {i < t.how.steps.length - 1 && (
                   <span
                     className="absolute right-0 top-6 hidden h-px w-8 bg-volt/30 lg:block"
                     aria-hidden="true"

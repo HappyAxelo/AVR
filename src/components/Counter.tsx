@@ -5,10 +5,17 @@ interface CounterProps {
   value: number
   suffix?: string
   duration?: number
+  /** BCP 47 tag for number grouping, so 350,000 localises correctly. */
+  locale?: string
 }
 
 /** Counts up from 0 to value once when scrolled into view. */
-export default function Counter({ value, suffix = '', duration = 1.6 }: CounterProps) {
+export default function Counter({
+  value,
+  suffix = '',
+  duration = 1.6,
+  locale = 'en-GB',
+}: CounterProps) {
   const ref = useRef<HTMLSpanElement>(null)
   const inView = useInView(ref, { once: true, margin: '-60px' })
   const reduceMotion = useReducedMotion()
@@ -35,7 +42,7 @@ export default function Counter({ value, suffix = '', duration = 1.6 }: CounterP
 
   return (
     <span ref={ref}>
-      {display.toLocaleString('en-GB')}
+      {display.toLocaleString(locale)}
       {suffix}
     </span>
   )
