@@ -14,7 +14,7 @@ function RwandaMap({ label }: { label: string }) {
         d="M111 101 L148 83 L208 74 L292 33 L351 78 L362 132 L349 193 L342 239
            L281 239 L232 277 L184 304 L111 303 L54 269 L75 223 L51 193 L74 155
            L38 124 Z"
-        fill="#163527"
+        fill="#1a5638"
         stroke="#C6F135"
         strokeOpacity="0.45"
         strokeWidth="2"
@@ -25,7 +25,7 @@ function RwandaMap({ label }: { label: string }) {
       <path
         d="M38 124 L74 155 L51 193 L75 223 L54 269 L74 257 L94 221 L72 192
            L94 152 L58 122 Z"
-        fill="#0a2419"
+        fill="#0b3222"
         stroke="#C6F135"
         strokeOpacity="0.18"
         strokeWidth="1"

@@ -64,9 +64,9 @@ export default function SprayCanvas({
         const nx = n * width
         const ny = originY * height
         const grad = ctx.createLinearGradient(nx, ny, nx, height)
-        grad.addColorStop(0, 'rgba(244, 241, 234, 0.28)')
-        grad.addColorStop(0.7, 'rgba(244, 241, 234, 0.08)')
-        grad.addColorStop(1, 'rgba(244, 241, 234, 0)')
+        grad.addColorStop(0, 'rgba(248, 255, 235, 0.45)')
+        grad.addColorStop(0.7, 'rgba(248, 255, 235, 0.14)')
+        grad.addColorStop(1, 'rgba(248, 255, 235, 0)')
         ctx.fillStyle = grad
         ctx.beginPath()
         ctx.moveTo(nx, ny)
@@ -128,8 +128,10 @@ export default function SprayCanvas({
         p.x += p.vx * dt
         p.y += p.vy * dt
 
+        // Slightly cool white so the mist still reads against the lighter
+        // green sky rather than washing into it.
         const fade = 1 - p.life / p.maxLife
-        ctx.fillStyle = `rgba(244, 241, 234, ${0.35 * fade})`
+        ctx.fillStyle = `rgba(248, 255, 235, ${0.55 * fade})`
         ctx.beginPath()
         ctx.arc(p.x, p.y, p.size * (1 + p.life * 0.5), 0, Math.PI * 2)
         ctx.fill()

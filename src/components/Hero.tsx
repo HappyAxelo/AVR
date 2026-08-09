@@ -20,29 +20,29 @@ function Terraces() {
     >
       <path
         d="M0 180 C 240 130 420 210 720 170 C 1020 130 1200 200 1440 160 L1440 420 L0 420 Z"
-        fill="#123a2a"
+        fill="#17573a"
       />
       <path
         d="M0 250 C 280 200 480 280 760 240 C 1040 200 1240 270 1440 235 L1440 420 L0 420 Z"
-        fill="#0e2f21"
+        fill="#134a31"
       />
       <path
         d="M0 320 C 300 280 520 350 800 315 C 1080 280 1280 340 1440 310 L1440 420 L0 420 Z"
-        fill="#0a2419"
+        fill="#0f3d28"
       />
       {/* contour lines */}
       <path
         d="M0 205 C 250 158 440 235 730 196 C 1030 158 1210 224 1440 186"
         fill="none"
         stroke="#C6F135"
-        strokeOpacity="0.12"
+        strokeOpacity="0.20"
         strokeWidth="1.5"
       />
       <path
         d="M0 285 C 290 238 500 312 780 274 C 1060 238 1250 302 1440 268"
         fill="none"
         stroke="#C6F135"
-        strokeOpacity="0.08"
+        strokeOpacity="0.14"
         strokeWidth="1.5"
       />
     </svg>
@@ -76,7 +76,7 @@ export default function Hero() {
         aria-hidden="true"
         style={{
           background:
-            'radial-gradient(90% 60% at 70% 10%, rgba(198,241,53,0.07), transparent 60%)',
+            'radial-gradient(90% 60% at 70% 10%, rgba(198,241,53,0.10), transparent 60%)',
         }}
       />
 

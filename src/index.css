@@ -1,10 +1,13 @@
 @import "tailwindcss";
 
 @theme {
-  /* AVR brand */
-  --color-terrace: #0b2a1e;
-  --color-terrace-dark: #071d14;
-  --color-terrace-light: #123a2a;
+  /* AVR brand.
+     The greens are deliberately lifted off black: the darkest surface is
+     #0E3826, not a near-black. Every muted text colour on these backgrounds
+     was checked against WCAG AA. */
+  --color-terrace: #12472f;
+  --color-terrace-dark: #0e3826;
+  --color-terrace-light: #1d6042;
   --color-paper: #f4f1ea;
   --color-volt: #c6f135;
   --color-ink: #101410;

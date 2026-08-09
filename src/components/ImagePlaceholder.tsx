@@ -15,7 +15,7 @@ export default function ImagePlaceholder({
   label = 'Photograph to be supplied',
 }: ImagePlaceholderProps) {
   const shift = (seed % 3) * 18
-  const tone = ['#123a2a', '#0e2f21', '#16402e'][seed % 3]
+  const tone = ['#17573a', '#134a31', '#1b6244'][seed % 3]
 
   return (
     <div className={`relative overflow-hidden bg-terrace ${className ?? ''}`}>
@@ -31,13 +31,13 @@ export default function ImagePlaceholder({
           d={`M0 ${120 + shift} C 90 ${96 + shift} 150 ${140 + shift} 230 ${118 + shift} C 300 ${
             100 + shift
           } 350 ${132 + shift} 400 ${112 + shift} L400 260 L0 260 Z`}
-          fill="#0a2419"
+          fill="#0f3d28"
         />
         <path
           d={`M0 ${170 + shift} C 100 ${148 + shift} 170 ${190 + shift} 250 ${168 + shift} C 320 ${
             150 + shift
           } 360 ${180 + shift} 400 ${162 + shift} L400 260 L0 260 Z`}
-          fill="#071d14"
+          fill="#0c3323"
         />
         <path
           d={`M0 ${132 + shift} C 92 ${108 + shift} 152 ${152 + shift} 232 ${130 + shift}`}
