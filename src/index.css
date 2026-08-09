@@ -1,0 +1,38 @@
+@import "tailwindcss";
+
+@theme {
+  /* AVR brand */
+  --color-terrace: #0b2a1e;
+  --color-terrace-dark: #071d14;
+  --color-terrace-light: #123a2a;
+  --color-paper: #f4f1ea;
+  --color-volt: #c6f135;
+  --color-ink: #101410;
+
+  --font-display: "Clash Display", "Satoshi", system-ui, sans-serif;
+  --font-body: "Satoshi", system-ui, sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--color-paper);
+  color: var(--color-ink);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-display);
+}
