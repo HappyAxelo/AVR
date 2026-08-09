@@ -1,15 +1,45 @@
 import { Link } from 'react-router-dom'
+import Nav from '../components/Nav'
+import Footer from '../components/Footer'
+import { formatDate } from '../components/NewsSection'
+import { newsPosts } from '../data/mock'
 
 export default function News() {
+  const published = newsPosts
+    .filter((p) => p.status === 'published')
+    .sort((a, b) => b.published_at.localeCompare(a.published_at))
+
   return (
-    <main className="mx-auto min-h-screen max-w-3xl px-6 py-24">
-      <h1 className="text-4xl font-semibold">News</h1>
-      <p className="mt-4 text-ink/70">
-        Articles will load from Supabase in a later phase.
-      </p>
-      <Link to="/" className="mt-8 inline-block underline">
-        Back to home
-      </Link>
-    </main>
+    <>
+      <Nav />
+      <main className="mx-auto min-h-screen max-w-4xl px-5 pb-24 pt-32 sm:px-8">
+        <p className="text-xs font-semibold uppercase tracking-[0.25em] text-terrace/70">News</p>
+        <h1 className="mt-3 text-4xl font-semibold text-terrace sm:text-5xl">From the field.</h1>
+
+        <div className="mt-12 space-y-5">
+          {published.map((post) => (
+            <article key={post.id}>
+              <Link
+                to={`/news/${post.slug}`}
+                className="group block rounded-2xl border border-terrace/10 bg-white/60 p-7 transition duration-300 hover:border-terrace/25 hover:shadow-lg hover:shadow-terrace/5"
+              >
+                <time
+                  dateTime={post.published_at}
+                  className="text-xs font-medium uppercase tracking-wider text-ink/60"
+                >
+                  {formatDate(post.published_at)}
+                </time>
+                <h2 className="mt-2 text-2xl font-semibold text-terrace">{post.title}</h2>
+                <p className="mt-2 max-w-2xl leading-relaxed text-ink/60">{post.excerpt}</p>
+                <span className="mt-4 inline-block text-sm font-medium text-terrace/70 transition group-hover:text-terrace">
+                  Read article →
+                </span>
+              </Link>
+            </article>
+          ))}
+        </div>
+      </main>
+      <Footer />
+    </>
   )
 }

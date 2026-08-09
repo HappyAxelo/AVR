@@ -36,3 +36,33 @@ h3,
 h4 {
   font-family: var(--font-display);
 }
+
+/* Keep anchored sections clear of the sticky nav */
+section[id] {
+  scroll-margin-top: 4.5rem;
+}
+
+/* Rotor blur discs on the hero drone */
+@keyframes rotor-pulse {
+  0%,
+  100% {
+    opacity: 0.2;
+    transform: scaleX(1);
+  }
+  50% {
+    opacity: 0.45;
+    transform: scaleX(0.88);
+  }
+}
+
+.rotor-disc {
+  transform-origin: center;
+  transform-box: fill-box;
+  animation: rotor-pulse 0.18s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rotor-disc {
+    animation: none;
+  }
+}
