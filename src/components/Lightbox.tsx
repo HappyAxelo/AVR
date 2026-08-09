@@ -1,10 +1,15 @@
 import { useEffect, useRef } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import ImagePlaceholder from './ImagePlaceholder'
-import type { ProjectImage } from '../data/projects'
+
+/** Shared by project galleries and news galleries. */
+export interface LightboxImage {
+  url: string | null
+  caption: string
+}
 
 interface LightboxProps {
-  images: ProjectImage[]
+  images: LightboxImage[]
   index: number | null
   onClose: () => void
   onNavigate: (index: number) => void

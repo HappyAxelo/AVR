@@ -102,15 +102,19 @@ export interface Dict {
     message: string
     optional: string
     submit: string
+    sending: string
     successTitle: string
     successBody: string
+    errorBody: string
   }
   newsletter: {
     title: string
     intro: string
     placeholder: string
     submit: string
+    sending: string
     success: string
+    error: string
   }
   footer: {
     tagline: string

@@ -16,44 +16,8 @@ export const supabase = createClient(url ?? '', key ?? '', {
   auth: { persistSession: true, autoRefreshToken: true },
 })
 
-export const hasSupabase = Boolean(url && key)
-
-/** Rows as stored. Gallery images are `[{ url, caption }]`. */
-export interface GalleryImage {
-  url: string
-  caption: string
-}
-
-export interface NewsRow {
-  id: string
-  title: string
-  slug: string
-  excerpt: string
-  body: string
-  cover_image_url: string | null
-  gallery: GalleryImage[]
-  status: 'draft' | 'published'
-  published_at: string | null
-  created_at: string
-  updated_at: string
-}
-
-export interface ProjectRow {
-  id: string
-  title: string
-  slug: string
-  client: string
-  year: string
-  summary: string
-  overview: string
-  task: string
-  cover_image_url: string | null
-  gallery: GalleryImage[]
-  status: 'draft' | 'published'
-  sort_order: number
-  created_at: string
-  updated_at: string
-}
+/** Row shapes are shared with the public REST client. */
+export type { GalleryImage, NewsRow, ProjectRow } from './rest'
 
 export interface ContactSubmission {
   name: string

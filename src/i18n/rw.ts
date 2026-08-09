@@ -128,8 +128,10 @@ const rw: Dict = {
     message: 'Ubutumwa',
     optional: '(si ngombwa)',
     submit: 'Ohereza icyifuzo',
+    sending: 'Kohereza…',
     successTitle: 'Murakoze.',
     successBody: 'Twakiriye amakuru yawe, tuzaguhamagara vuba kugira ngo dutegure gutera.',
+    errorBody: 'Ntibyakunze kohereza. Ongera ugerageze, cyangwa uduhamagare.',
   },
   newsletter: {
     title: 'Amakuru yo mu murima, akugereho.',
@@ -137,7 +139,9 @@ const rw: Dict = {
       "Amakuru y'umurima, kwibutsa igihe cyo gutera n'amakuru y'ikigo. Imeyili nkeya mu gihembwe, ntabwo ari nyinshi.",
     placeholder: 'wowe@urugero.com',
     submit: 'Iyandikishe',
+    sending: 'Kwiyandikisha…',
     success: 'Reba imeyili yawe — emeza aderesi yawe kugira ngo urangize kwiyandikisha.',
+    error: 'Ntibyakunze. Ongera ugerageze.',
   },
   footer: {
     tagline: "Ampere Vision Rwanda Ltd. Gutera umuti neza ku mirima y'u Rwanda.",

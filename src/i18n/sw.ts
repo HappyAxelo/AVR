@@ -128,8 +128,10 @@ const sw: Dict = {
     message: 'Ujumbe',
     optional: '(si lazima)',
     submit: 'Tuma ombi',
+    sending: 'Inatuma…',
     successTitle: 'Asante.',
     successBody: 'Tumepokea maelezo yako na tutawasiliana nawe hivi karibuni kupanga unyunyiziaji.',
+    errorBody: 'Samahani, haikutumwa. Tafadhali jaribu tena, au tupigie simu.',
   },
   newsletter: {
     title: 'Habari za shambani, moja kwa moja kwako.',
@@ -137,7 +139,9 @@ const sw: Dict = {
       'Maelezo ya shambani, vikumbusho vya msimu wa kunyunyizia na habari za kampuni. Barua pepe chache kwa msimu, si zaidi.',
     placeholder: 'wewe@mfano.com',
     submit: 'Jiandikishe',
+    sending: 'Inaandikisha…',
     success: 'Angalia kikasha chako — thibitisha barua pepe yako ili kukamilisha.',
+    error: 'Samahani, haikufanya kazi. Tafadhali jaribu tena.',
   },
   footer: {
     tagline: 'Ampere Vision Rwanda Ltd. Unyunyiziaji sahihi kwa ndege kwa mashamba ya Rwanda.',

@@ -5,15 +5,26 @@ import Footer from '../components/Footer'
 import ImagePlaceholder from '../components/ImagePlaceholder'
 import Lightbox from '../components/Lightbox'
 import Reveal from '../components/Reveal'
-import { projects } from '../data/projects'
+import { useProject } from '../lib/content'
 import { useT } from '../i18n'
 
 export default function WorkProject() {
   const { slug } = useParams()
   const t = useT()
   const [lightbox, setLightbox] = useState<number | null>(null)
+  const { data: project, loading } = useProject(slug)
 
-  const project = projects.find((p) => p.slug === slug && p.status === 'published')
+  if (loading) {
+    return (
+      <>
+        <Nav />
+        <main className="mx-auto flex min-h-screen max-w-2xl items-center justify-center px-5">
+          <p className="text-ink/65">{t.common.loading}</p>
+        </main>
+        <Footer />
+      </>
+    )
+  }
 
   if (!project) {
     return (
@@ -33,6 +44,8 @@ export default function WorkProject() {
     )
   }
 
+  const gallery = project.gallery ?? []
+
   return (
     <>
       <Nav />
@@ -49,23 +62,28 @@ export default function WorkProject() {
             {project.title}
           </h1>
 
-          <dl className="mt-8 flex flex-wrap gap-x-12 gap-y-4 border-y border-terrace/10 py-5">
-            <div>
-              <dt className="text-xs font-medium uppercase tracking-wider text-ink/60">
-                {t.work.client}
-              </dt>
-              <dd className="mt-1 font-medium text-terrace">{project.client}</dd>
-            </div>
-            <div>
-              <dt className="text-xs font-medium uppercase tracking-wider text-ink/60">
-                {t.work.year}
-              </dt>
-              <dd className="mt-1 font-medium text-terrace">{project.year}</dd>
-            </div>
-          </dl>
+          {(project.client || project.year) && (
+            <dl className="mt-8 flex flex-wrap gap-x-12 gap-y-4 border-y border-terrace/10 py-5">
+              {project.client && (
+                <div>
+                  <dt className="text-xs font-medium uppercase tracking-wider text-ink/60">
+                    {t.work.client}
+                  </dt>
+                  <dd className="mt-1 font-medium text-terrace">{project.client}</dd>
+                </div>
+              )}
+              {project.year && (
+                <div>
+                  <dt className="text-xs font-medium uppercase tracking-wider text-ink/60">
+                    {t.work.year}
+                  </dt>
+                  <dd className="mt-1 font-medium text-terrace">{project.year}</dd>
+                </div>
+              )}
+            </dl>
+          )}
         </div>
 
-        {/* Cover */}
         <div className="mx-auto mt-10 max-w-6xl px-5 sm:px-8">
           <div className="aspect-[16/9] overflow-hidden rounded-2xl">
             {project.cover_image_url ? (
@@ -80,31 +98,35 @@ export default function WorkProject() {
           </div>
         </div>
 
-        {/* Overview + task */}
         <div className="mx-auto grid max-w-5xl gap-10 px-5 py-16 sm:px-8 md:grid-cols-2 md:py-20">
-          <Reveal>
-            <h2 className="text-xs font-semibold uppercase tracking-[0.25em] text-terrace/70">
-              {t.work.overview}
-            </h2>
-            <p className="mt-4 leading-relaxed text-ink/75">{project.overview}</p>
-          </Reveal>
-          <Reveal delay={0.08}>
-            <h2 className="text-xs font-semibold uppercase tracking-[0.25em] text-terrace/70">
-              {t.work.task}
-            </h2>
-            <p className="mt-4 leading-relaxed text-ink/75">{project.task}</p>
-          </Reveal>
+          {project.overview && (
+            <Reveal>
+              <h2 className="text-xs font-semibold uppercase tracking-[0.25em] text-terrace/70">
+                {t.work.overview}
+              </h2>
+              <p className="mt-4 whitespace-pre-line leading-relaxed text-ink/75">
+                {project.overview}
+              </p>
+            </Reveal>
+          )}
+          {project.task && (
+            <Reveal delay={0.08}>
+              <h2 className="text-xs font-semibold uppercase tracking-[0.25em] text-terrace/70">
+                {t.work.task}
+              </h2>
+              <p className="mt-4 whitespace-pre-line leading-relaxed text-ink/75">{project.task}</p>
+            </Reveal>
+          )}
         </div>
 
-        {/* Gallery */}
-        {project.gallery.length > 0 && (
+        {gallery.length > 0 && (
           <section className="bg-terrace py-16 text-paper sm:py-20" aria-label={t.work.gallery}>
             <div className="mx-auto max-w-6xl px-5 sm:px-8">
               <h2 className="text-xs font-semibold uppercase tracking-[0.25em] text-volt">
                 {t.work.gallery}
               </h2>
               <ul className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                {project.gallery.map((image, i) => (
+                {gallery.map((image, i) => (
                   <li key={i}>
                     <button
                       type="button"
@@ -123,7 +145,11 @@ export default function WorkProject() {
                           <ImagePlaceholder className="h-full w-full" seed={i + 1} />
                         )}
                       </span>
-                      <span className="block px-4 py-3 text-sm text-paper/70">{image.caption}</span>
+                      {image.caption && (
+                        <span className="block px-4 py-3 text-sm text-paper/75">
+                          {image.caption}
+                        </span>
+                      )}
                     </button>
                   </li>
                 ))}
@@ -134,7 +160,7 @@ export default function WorkProject() {
       </main>
 
       <Lightbox
-        images={project.gallery}
+        images={gallery}
         index={lightbox}
         onClose={() => setLightbox(null)}
         onNavigate={setLightbox}

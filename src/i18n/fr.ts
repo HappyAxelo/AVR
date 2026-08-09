@@ -128,9 +128,11 @@ const fr: Dict = {
     message: 'Message',
     optional: '(facultatif)',
     submit: 'Envoyer la demande',
+    sending: 'Envoi…',
     successTitle: 'Merci.',
     successBody:
       'Nous avons vos coordonnées et vous contacterons sous peu pour planifier le traitement.',
+    errorBody: "L'envoi a échoué. Réessayez, ou appelez-nous directement.",
   },
   newsletter: {
     title: 'Les nouvelles du terrain, directement chez vous.',
@@ -138,7 +140,9 @@ const fr: Dict = {
       "Notes de terrain, rappels de saison et actualités de l'entreprise. Quelques e-mails par saison, pas plus.",
     placeholder: 'vous@exemple.com',
     submit: "S'abonner",
+    sending: 'Inscription…',
     success: 'Vérifiez votre boîte de réception et confirmez votre adresse pour terminer.',
+    error: "Cela n'a pas fonctionné. Veuillez réessayer.",
   },
   footer: {
     tagline: 'Ampere Vision Rwanda Ltd. Pulvérisation de précision par drone pour les champs du Rwanda.',

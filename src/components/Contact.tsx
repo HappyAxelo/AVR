@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import type { FormEvent } from 'react'
 import Reveal from './Reveal'
-import { contact } from '../data/mock'
+import { insertRow } from '../lib/rest'
+import { useContactDetails } from '../lib/content'
 import { useT } from '../i18n'
 
 const inputClass =
@@ -11,11 +12,41 @@ const labelClass = 'mb-1.5 block text-sm font-medium text-paper/70'
 
 export default function Contact() {
   const [sent, setSent] = useState(false)
+  const [busy, setBusy] = useState(false)
+  const [error, setError] = useState<string | null>(null)
   const t = useT()
+  const contact = useContactDetails()
 
-  const onSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    // Phase 3 wires this to Supabase (contact_submissions) + enquiry notification.
+    if (busy) return
+    setBusy(true)
+    setError(null)
+
+    const form = new FormData(e.currentTarget)
+    const text = (k: string) => {
+      const v = (form.get(k) as string | null)?.trim()
+      return v ? v : null
+    }
+    const hectaresRaw = text('hectares')
+
+    const payload = {
+      name: text('name') ?? '',
+      phone: text('phone') ?? '',
+      email: text('email'),
+      location: text('location'),
+      crop: text('crop'),
+      hectares: hectaresRaw ? Number(hectaresRaw) : null,
+      message: text('message'),
+    }
+
+    const { ok } = await insertRow('contact_submissions', payload)
+    setBusy(false)
+
+    if (!ok) {
+      setError(t.contact.errorBody)
+      return
+    }
     setSent(true)
   }
 
@@ -159,10 +190,16 @@ export default function Contact() {
               <div className="sm:col-span-2">
                 <button
                   type="submit"
-                  className="w-full rounded-full bg-volt px-7 py-3.5 font-semibold text-terrace transition hover:brightness-110 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-volt sm:w-auto"
+                  disabled={busy}
+                  className="w-full rounded-full bg-volt px-7 py-3.5 font-semibold text-terrace transition hover:brightness-110 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-volt disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
                 >
-                  {t.contact.submit}
+                  {busy ? t.contact.sending : t.contact.submit}
                 </button>
+                {error && (
+                  <p role="alert" className="mt-3 text-sm text-volt">
+                    {error}
+                  </p>
+                )}
               </div>
             </form>
           )}

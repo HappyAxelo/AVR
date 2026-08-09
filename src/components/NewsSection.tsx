@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import Reveal from './Reveal'
-import { newsPosts } from '../data/mock'
+import { usePublishedNews } from '../lib/content'
 import { useI18n } from '../i18n'
 
 const DATE_LOCALES: Record<string, string> = {
@@ -10,7 +10,8 @@ const DATE_LOCALES: Record<string, string> = {
   sw: 'sw-KE',
 }
 
-export function formatDate(iso: string, locale = 'en') {
+export function formatDate(iso: string | null, locale = 'en') {
+  if (!iso) return ''
   return new Date(iso).toLocaleDateString(DATE_LOCALES[locale] ?? 'en-GB', {
     day: 'numeric',
     month: 'long',
@@ -20,11 +21,9 @@ export function formatDate(iso: string, locale = 'en') {
 
 export default function NewsSection() {
   const { t, locale } = useI18n()
+  const { data: latest } = usePublishedNews(3)
 
-  const latest = newsPosts
-    .filter((p) => p.status === 'published')
-    .sort((a, b) => b.published_at.localeCompare(a.published_at))
-    .slice(0, 3)
+  if (latest.length === 0) return null
 
   return (
     <section id="news" className="bg-paper py-24 sm:py-32" aria-label={t.news.eyebrow}>
@@ -54,22 +53,34 @@ export default function NewsSection() {
               <article className="group h-full">
                 <Link
                   to={`/news/${post.slug}`}
-                  className="flex h-full flex-col rounded-2xl border border-terrace/10 bg-white/60 p-6 transition duration-300 hover:border-terrace/25 hover:shadow-lg hover:shadow-terrace/5"
+                  className="flex h-full flex-col overflow-hidden rounded-2xl border border-terrace/10 bg-white/60 transition duration-300 hover:border-terrace/25 hover:shadow-lg hover:shadow-terrace/5"
                 >
-                  <time
-                    dateTime={post.published_at}
-                    className="text-xs font-medium uppercase tracking-wider text-ink/60"
-                  >
-                    {formatDate(post.published_at, locale)}
-                  </time>
-                  <h3 className="mt-3 text-lg font-semibold leading-snug text-terrace">
-                    {post.title}
-                  </h3>
-                  <p className="mt-2 line-clamp-3 text-sm leading-relaxed text-ink/60">
-                    {post.excerpt}
-                  </p>
-                  <span className="mt-auto pt-4 text-sm font-medium text-terrace/70 transition group-hover:text-terrace">
-                    {t.news.read} →
+                  {post.cover_image_url && (
+                    <span className="block aspect-[16/9] overflow-hidden">
+                      <img
+                        src={post.cover_image_url}
+                        alt=""
+                        loading="lazy"
+                        className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+                      />
+                    </span>
+                  )}
+                  <span className="flex flex-1 flex-col p-6">
+                    <time
+                      dateTime={post.published_at ?? undefined}
+                      className="text-xs font-medium uppercase tracking-wider text-ink/60"
+                    >
+                      {formatDate(post.published_at, locale)}
+                    </time>
+                    <span className="mt-3 block text-lg font-semibold leading-snug text-terrace">
+                      {post.title}
+                    </span>
+                    <span className="mt-2 line-clamp-3 block text-sm leading-relaxed text-ink/60">
+                      {post.excerpt}
+                    </span>
+                    <span className="mt-auto block pt-4 text-sm font-medium text-terrace/70 transition group-hover:text-terrace">
+                      {t.news.read} →
+                    </span>
                   </span>
                 </Link>
               </article>

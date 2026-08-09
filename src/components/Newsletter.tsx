@@ -1,15 +1,34 @@
 import { useState } from 'react'
 import type { FormEvent } from 'react'
 import Reveal from './Reveal'
+import { insertRow } from '../lib/rest'
 import { useT } from '../i18n'
 
 export default function Newsletter() {
   const [done, setDone] = useState(false)
+  const [busy, setBusy] = useState(false)
+  const [error, setError] = useState<string | null>(null)
   const t = useT()
 
-  const onSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    // Phase 5 wires this to double opt-in via Supabase + Resend.
+    if (busy) return
+    const email = (new FormData(e.currentTarget).get('email') as string).trim().toLowerCase()
+    if (!email) return
+
+    setBusy(true)
+    setError(null)
+
+    // `confirmed` stays false until the double opt-in email is clicked.
+    const { ok, code } = await insertRow('subscribers', { email })
+    setBusy(false)
+
+    // 23505 is a duplicate email. Saying "already subscribed" would leak who
+    // is on the list, so an existing address sees the same success state.
+    if (!ok && code !== '23505') {
+      setError(t.newsletter.error)
+      return
+    }
     setDone(true)
   }
 
@@ -43,11 +62,17 @@ export default function Newsletter() {
               />
               <button
                 type="submit"
-                className="rounded-full bg-terrace px-6 py-3 font-semibold text-paper transition hover:bg-terrace-light focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terrace"
+                disabled={busy}
+                className="rounded-full bg-terrace px-6 py-3 font-semibold text-paper transition hover:bg-terrace-light focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-terrace disabled:cursor-not-allowed disabled:opacity-60"
               >
-                {t.newsletter.submit}
+                {busy ? t.newsletter.sending : t.newsletter.submit}
               </button>
             </form>
+          )}
+          {error && (
+            <p role="alert" className="mt-4 text-sm font-medium text-terrace">
+              {error}
+            </p>
           )}
         </Reveal>
       </div>

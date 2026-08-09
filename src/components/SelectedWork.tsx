@@ -1,15 +1,14 @@
 import { Link } from 'react-router-dom'
 import Reveal from './Reveal'
 import ImagePlaceholder from './ImagePlaceholder'
-import { projects } from '../data/projects'
+import { usePublishedProjects } from '../lib/content'
 import { useT } from '../i18n'
 
 export default function SelectedWork() {
   const t = useT()
-  const published = projects
-    .filter((p) => p.status === 'published')
-    .sort((a, b) => a.sort_order - b.sort_order)
-    .slice(0, 3)
+  const { data: published } = usePublishedProjects(3)
+
+  if (published.length === 0) return null
 
   return (
     <section id="work" className="bg-terrace py-24 text-paper sm:py-32" aria-label={t.work.allTitle}>
@@ -21,7 +20,7 @@ export default function SelectedWork() {
                 {t.work.eyebrow}
               </p>
               <h2 className="mt-3 text-3xl font-semibold sm:text-5xl">{t.work.title}</h2>
-              <p className="mt-4 max-w-md text-paper/65">{t.work.intro}</p>
+              <p className="mt-4 max-w-md text-paper/70">{t.work.intro}</p>
             </div>
             <Link
               to="/work"
@@ -53,11 +52,13 @@ export default function SelectedWork() {
                     )}
                   </div>
                   <div className="flex flex-1 flex-col p-6">
-                    <p className="text-xs font-medium uppercase tracking-wider text-paper/60">
-                      {project.client} · {project.year}
-                    </p>
+                    {(project.client || project.year) && (
+                      <p className="text-xs font-medium uppercase tracking-wider text-paper/70">
+                        {[project.client, project.year].filter(Boolean).join(' · ')}
+                      </p>
+                    )}
                     <h3 className="mt-2 text-lg font-semibold leading-snug">{project.title}</h3>
-                    <p className="mt-2 text-sm leading-relaxed text-paper/65">{project.summary}</p>
+                    <p className="mt-2 text-sm leading-relaxed text-paper/70">{project.summary}</p>
                     <span className="mt-auto pt-5 text-sm font-medium text-volt">
                       {t.work.view} →
                     </span>
