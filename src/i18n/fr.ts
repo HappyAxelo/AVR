@@ -151,6 +151,20 @@ const fr: Dict = {
     rights: 'Tous droits réservés.',
     socials: '[CONFIRM social links]',
   },
+  tokenPage: {
+    invalidTitle: 'Lien non reconnu',
+    invalidBody: "Ce lien n'est pas valide. Il a peut-être déjà été utilisé ou copié partiellement.",
+    errorTitle: 'Une erreur est survenue',
+    errorBody: 'Veuillez réessayer dans un instant.',
+    confirm: {
+      doneTitle: 'Abonnement confirmé',
+      doneBody: 'Merci. Vous aurez de nos nouvelles au début de chaque saison de traitement.',
+    },
+    unsubscribe: {
+      doneTitle: 'Désabonné',
+      doneBody: 'Vous ne recevrez plus de newsletters de la part d’AVR.',
+    },
+  },
   common: {
     loading: 'Chargement…',
     pageNotFound: 'Page introuvable',

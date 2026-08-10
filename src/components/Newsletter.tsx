@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import type { FormEvent } from 'react'
 import Reveal from './Reveal'
-import { insertRow } from '../lib/rest'
+import { requestSubscribe } from '../lib/functions'
 import { useT } from '../i18n'
 
 export default function Newsletter() {
@@ -19,13 +19,13 @@ export default function Newsletter() {
     setBusy(true)
     setError(null)
 
-    // `confirmed` stays false until the double opt-in email is clicked.
-    const { ok, code } = await insertRow('subscribers', { email })
+    // The function creates the row unconfirmed and emails the opt-in link.
+    // It answers the same way for a new and an existing address, so this form
+    // cannot be used to test who is already on the list.
+    const { ok } = await requestSubscribe(email)
     setBusy(false)
 
-    // 23505 is a duplicate email. Saying "already subscribed" would leak who
-    // is on the list, so an existing address sees the same success state.
-    if (!ok && code !== '23505') {
+    if (!ok) {
       setError(t.newsletter.error)
       return
     }

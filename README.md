@@ -9,7 +9,7 @@ larviciding.
 
 - React + Vite + TypeScript + Tailwind CSS v4 + Framer Motion
 - Supabase (Postgres, Auth, Storage, Edge Functions) — free tier
-- Resend for email (100/day, 3,000/month free) via Edge Functions — phase 5
+- Resend for email (100/day, 3,000/month free) via Supabase Edge Functions
 - Netlify hosting — free tier
 
 No paid services anywhere. The only paid item is the domain.
@@ -32,7 +32,8 @@ npm run dev
 | `/news`        | All published news posts         |
 | `/news/:slug`  | Article + photo gallery          |
 | `/admin`       | Admin panel (Supabase auth)      |
-| `/unsubscribe` | Newsletter unsubscribe (phase 5) |
+| `/confirm`     | Newsletter opt-in confirmation   |
+| `/unsubscribe` | Newsletter unsubscribe           |
 
 ## Signing in to the admin panel
 
@@ -69,6 +70,40 @@ everywhere on the site, in all four languages, without a redeploy.
 
 Marketing copy and headings are not here: each needs a version per language,
 so they live in the translation files (see below).
+
+## Sending a newsletter
+
+`/admin` → **Newsletter**. Write a subject and message, leaving a blank line
+between paragraphs. Then:
+
+1. **Send test to myself** — one email to your own address, so you can see
+   exactly how it looks. It is not recorded as a campaign.
+2. **Send to all subscribers** — goes to everyone who is subscribed *and*
+   confirmed. Every email carries a working unsubscribe link built from that
+   person's own token.
+
+Past campaigns are listed underneath with recipient counts.
+
+The free plan allows **100 emails a day and 3,000 a month**. If a send would
+exceed the daily allowance, nothing is sent and the panel tells you how many
+you have left. That is deliberate — a partial send that fails halfway is
+worse than not starting. If the list outgrows the free tier, Brevo offers
+300/day free and is a drop-in swap: only `sendEmail`/`sendBatch` in
+`supabase/functions/_shared/lib.ts` would change.
+
+## How the newsletter opt-in works
+
+1. Someone enters their email on the site. The `subscribe` function creates
+   them **unconfirmed** and emails a confirmation link.
+2. Clicking it lands on `/confirm?token=…`, which calls `confirm-subscription`
+   and flips `confirmed` to true. Only then can they receive a newsletter.
+3. Every newsletter footer links to `/unsubscribe?token=…`, which sets their
+   status to `unsubscribed`.
+
+Both links are idempotent — clicking twice says "already confirmed" or
+"already unsubscribed" rather than erroring — and another person's token is
+rejected. The forms answer identically for a new and an existing address, so
+they cannot be used to test who is on the list.
 
 ## Enquiries and subscribers
 
@@ -148,6 +183,33 @@ Search the codebase for `[CONFIRM]`:
 3. ✅ Supabase schema, RLS, storage, auth; public site reads live content
 4. ✅ Admin panel: news, projects, photos with captions, enquiries,
    subscribers, site details
-5. Edge Functions: newsletter send, enquiry notification, double opt-in
+5. ✅ Edge Functions: newsletter send, enquiry notification, double opt-in
    confirmation, unsubscribe
 6. Netlify deploy + DNS and Resend verification
+
+## Edge Functions
+
+Deployed to project `vusbutgfaivhodtztsxm`; source in `supabase/functions/`.
+
+| Function               | JWT | Purpose                                        |
+| ---------------------- | --- | ---------------------------------------------- |
+| `subscribe`            | no  | Create subscriber, email the opt-in link       |
+| `confirm-subscription` | no  | Token → `confirmed = true`                     |
+| `unsubscribe`          | no  | Token → `status = unsubscribed`                |
+| `notify-enquiry`       | no  | Email AVR about one saved enquiry              |
+| `send-newsletter`      | yes | Admin-only send, with free-tier caps enforced  |
+
+The four public ones cannot require a JWT: two are opened from a mail client,
+which sends no Authorization header, and two are called by anonymous
+visitors. Each protects itself instead:
+
+- `subscribe` validates the address and sends at most one confirmation per
+  address; it never reveals whether an address is already on the list.
+- `notify-enquiry` takes only a row id, reads the details from the database
+  rather than the request, and flips a `notified` flag so a replayed request
+  sends nothing. It cannot be used as an open mailer.
+- `confirm-subscription` and `unsubscribe` need a token that only the owner
+  of the mailbox received.
+
+`send-newsletter` requires a valid JWT *and* re-checks the caller against the
+`admin_users` allowlist server-side.

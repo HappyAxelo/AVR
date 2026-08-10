@@ -73,7 +73,14 @@ export interface InsertResult {
   code?: string
 }
 
-/** POST a row. Returns ok:false plus the Postgres code when it fails. */
+/**
+ * POST a row. Returns ok:false plus the Postgres code when it fails.
+ *
+ * Always `return=minimal`: anonymous visitors may insert into these tables but
+ * cannot read them back, so asking PostgREST for the created row makes the
+ * whole insert fail the RLS check. When the caller needs the new row's id, it
+ * generates one with `newId()` and includes it in the payload.
+ */
 export async function insertRow(table: string, row: unknown): Promise<InsertResult> {
   if (!hasSupabase) return { ok: true }
   try {
@@ -88,4 +95,9 @@ export async function insertRow(table: string, row: unknown): Promise<InsertResu
   } catch {
     return { ok: false }
   }
+}
+
+/** A client-side UUID, so the caller knows the row id without reading it back. */
+export function newId(): string {
+  return crypto.randomUUID()
 }

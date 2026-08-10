@@ -11,7 +11,7 @@ const WorkProject = lazy(() => import('./pages/WorkProject'))
 const News = lazy(() => import('./pages/News'))
 const NewsPost = lazy(() => import('./pages/NewsPost'))
 const Admin = lazy(() => import('./pages/Admin'))
-const Unsubscribe = lazy(() => import('./pages/Unsubscribe'))
+const TokenAction = lazy(() => import('./pages/TokenAction'))
 const NotFound = lazy(() => import('./pages/NotFound'))
 
 function RouteFallback() {
@@ -35,7 +35,8 @@ export default function App() {
           <Route path="/news" element={<News />} />
           <Route path="/news/:slug" element={<NewsPost />} />
           <Route path="/admin/*" element={<Admin />} />
-          <Route path="/unsubscribe" element={<Unsubscribe />} />
+          <Route path="/unsubscribe" element={<TokenAction action="unsubscribe" />} />
+          <Route path="/confirm" element={<TokenAction action="confirm" />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Suspense>

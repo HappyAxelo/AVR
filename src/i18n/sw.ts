@@ -150,6 +150,20 @@ const sw: Dict = {
     rights: 'Haki zote zimehifadhiwa.',
     socials: '[CONFIRM social links]',
   },
+  tokenPage: {
+    invalidTitle: 'Kiungo hakikutambulika',
+    invalidBody: 'Kiungo hiki si halali. Huenda kilishatumika au hakikunakiliwa kikamilifu.',
+    errorTitle: 'Kuna hitilafu',
+    errorBody: 'Tafadhali jaribu tena baada ya muda mfupi.',
+    confirm: {
+      doneTitle: 'Usajili umethibitishwa',
+      doneBody: 'Asante. Utasikia kutoka kwetu mwanzoni mwa kila msimu wa kunyunyizia.',
+    },
+    unsubscribe: {
+      doneTitle: 'Umejiondoa',
+      doneBody: 'Hutapokea tena majarida kutoka AVR.',
+    },
+  },
   common: {
     loading: 'Inapakia…',
     pageNotFound: 'Ukurasa haukupatikana',

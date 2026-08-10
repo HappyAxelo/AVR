@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import type { FormEvent } from 'react'
 import Reveal from './Reveal'
-import { insertRow } from '../lib/rest'
+import { insertRow, newId } from '../lib/rest'
+import { notifyEnquiry } from '../lib/functions'
 import { useContactDetails } from '../lib/content'
 import { useT } from '../i18n'
 
@@ -30,7 +31,12 @@ export default function Contact() {
     }
     const hectaresRaw = text('hectares')
 
+    // Generated here rather than read back: anonymous visitors can insert
+    // into this table but not select from it.
+    const id = newId()
+
     const payload = {
+      id,
       name: text('name') ?? '',
       phone: text('phone') ?? '',
       email: text('email'),
@@ -47,6 +53,9 @@ export default function Contact() {
       setError(t.contact.errorBody)
       return
     }
+    // The enquiry is saved; emailing AVR is a follow-up that must not block
+    // or fail the visitor's submission.
+    notifyEnquiry(id)
     setSent(true)
   }
 

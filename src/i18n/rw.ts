@@ -150,6 +150,20 @@ const rw: Dict = {
     rights: 'Uburenganzira bwose bwitabwaho.',
     socials: '[CONFIRM social links]',
   },
+  tokenPage: {
+    invalidTitle: 'Iyi link ntabwo yemewe',
+    invalidBody: 'Iyi link ntabwo ikora. Ashobora kuba yarakoreshejwe cyangwa itandukuye neza.',
+    errorTitle: 'Habaye ikibazo',
+    errorBody: 'Ongera ugerageze nyuma y’akanya gato.',
+    confirm: {
+      doneTitle: 'Kwiyandikisha byemejwe',
+      doneBody: 'Murakoze. Tuzabandikira mu ntangiriro ya buri gihembwe cyo gutera umuti.',
+    },
+    unsubscribe: {
+      doneTitle: 'Wakuwe ku rutonde',
+      doneBody: 'Ntabwo uzongera kwakira ubutumwa bwa AVR.',
+    },
+  },
   common: {
     loading: 'Birimo gupakirwa…',
     pageNotFound: 'Urupapuro ntirwabonetse',

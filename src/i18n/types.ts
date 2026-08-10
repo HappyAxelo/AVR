@@ -122,6 +122,14 @@ export interface Dict {
     rights: string
     socials: string
   }
+  tokenPage: {
+    invalidTitle: string
+    invalidBody: string
+    errorTitle: string
+    errorBody: string
+    confirm: { doneTitle: string; doneBody: string }
+    unsubscribe: { doneTitle: string; doneBody: string }
+  }
   common: {
     loading: string
     pageNotFound: string

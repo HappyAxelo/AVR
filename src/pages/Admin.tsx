@@ -7,6 +7,7 @@ import { ProjectsList, ProjectEditor } from './admin/ProjectsAdmin'
 import Enquiries from './admin/Enquiries'
 import Subscribers from './admin/Subscribers'
 import SiteContent from './admin/SiteContent'
+import Newsletter from './admin/Newsletter'
 import { btnGhost } from './admin/ui'
 
 const links = [
@@ -15,6 +16,7 @@ const links = [
   { to: '/admin/projects', label: 'Our work' },
   { to: '/admin/enquiries', label: 'Enquiries' },
   { to: '/admin/subscribers', label: 'Subscribers' },
+  { to: '/admin/newsletter', label: 'Newsletter' },
   { to: '/admin/content', label: 'Site details' },
 ]
 
@@ -81,6 +83,7 @@ function Shell() {
           <Route path="projects/:id" element={<ProjectEditor />} />
           <Route path="enquiries" element={<Enquiries />} />
           <Route path="subscribers" element={<Subscribers />} />
+          <Route path="newsletter" element={<Newsletter />} />
           <Route path="content" element={<SiteContent />} />
           <Route
             path="*"

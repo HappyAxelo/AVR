@@ -147,6 +147,20 @@ const en: Dict = {
     rights: 'All rights reserved.',
     socials: '[CONFIRM social links]',
   },
+  tokenPage: {
+    invalidTitle: 'Link not recognised',
+    invalidBody: 'That link is not valid. It may have already been used, or been copied incompletely.',
+    errorTitle: 'Something went wrong',
+    errorBody: 'Please try the link again in a moment.',
+    confirm: {
+      doneTitle: 'Subscription confirmed',
+      doneBody: 'Thank you. You will hear from us at the start of each spray season.',
+    },
+    unsubscribe: {
+      doneTitle: 'Unsubscribed',
+      doneBody: 'You will not receive any more newsletters from AVR.',
+    },
+  },
   common: {
     loading: 'Loading…',
     pageNotFound: 'Page not found',
