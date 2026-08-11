@@ -164,6 +164,81 @@ is deliberately kept out of it: public pages talk to PostgREST with plain
 `fetch` via `src/lib/rest.ts`, and the SDK loads only inside the admin panel,
 which is a lazily-loaded route. Each extra language is about 2 kB.
 
+## Deploying to Netlify
+
+`netlify.toml` already carries the build command, publish directory, Node
+version, SPA redirect, cache headers and a Content Security Policy, so
+Netlify needs almost nothing typed in by hand.
+
+1. netlify.com → **Add new site** → **Import an existing project** → **GitHub**
+   → authorise → pick **HappyAxelo/AVR**.
+2. Leave the build settings as detected (`npm run build`, publish `dist`).
+3. Before the first deploy, open **Environment variables** and add:
+
+   | Key | Value |
+   | --- | --- |
+   | `VITE_SUPABASE_URL` | `https://vusbutgfaivhodtztsxm.supabase.co` |
+   | `VITE_SUPABASE_ANON_KEY` | the publishable key from Supabase → Settings → API Keys |
+
+   Only these two. The service-role and Resend keys are Edge Function
+   secrets and must never be set here — anything with a `VITE_` prefix is
+   compiled into the JavaScript that visitors download.
+
+4. **Deploy site.** Every push to `main` redeploys automatically.
+5. Once it is live, go back to Supabase → **Edge Functions → Secrets** and
+   change `SITE_URL` to the real URL (e.g. `https://avr.netlify.app`).
+   Confirmation and unsubscribe links are built from it, so until this is
+   right those links point at localhost.
+
+### Custom domain, once you have bought it
+
+In Netlify: **Domain management** → **Add a domain**. Netlify then shows one
+of two options, depending on where the domain is registered:
+
+- **Netlify DNS** — it gives you four nameservers to set at your registrar.
+  Simplest, and it manages the rest for you.
+- **External DNS** — keep your registrar's DNS and add these records:
+
+  | Type | Name | Value |
+  | --- | --- | --- |
+  | `A` | `@` | `75.2.60.5` |
+  | `CNAME` | `www` | `<your-site>.netlify.app` |
+
+  Netlify shows the exact values on that screen — use those rather than
+  copying from here, since its load-balancer address can change.
+
+HTTPS is issued automatically by Let's Encrypt once DNS resolves. No cost.
+
+### Verifying the domain in Resend
+
+Until this is done, email can only be sent to your own Resend account
+address, so real subscribers will receive nothing.
+
+Resend → **Domains** → **Add domain** → enter the AVR domain. Resend then
+generates records that are **unique to your domain** — copy them from that
+screen. They take these forms:
+
+| Purpose | Type | Name | Value |
+| --- | --- | --- | --- |
+| DKIM | `TXT` | `resend._domainkey` | long `p=…` public key from Resend |
+| SPF | `TXT` | `send` | `v=spf1 include:amazonses.com ~all` |
+| SPF (MX) | `MX` | `send` | `feedback-smtp.<region>.amazonses.com` priority `10` |
+
+Add a DMARC record too. Start in report-only so nothing is silently
+rejected while you check it is working:
+
+| Type | Name | Value |
+| --- | --- | --- |
+| `TXT` | `_dmarc` | `v=DMARC1; p=none; rua=mailto:amperevisionrwanda@gmail.com` |
+
+Once Resend shows the domain as **verified**, set the Edge Function secret
+`FROM_EMAIL` to `AVR <news@yourdomain>`. Tighten DMARC to `p=quarantine`
+after a couple of weeks of clean reports.
+
+**Do not send AVR mail from `klipwa.app`**, even though that domain is
+already verified on the same Resend account. Mail arriving from an
+unrelated domain looks like a mismatch to recipients and to spam filters.
+
 ## Still to confirm
 
 Search the codebase for `[CONFIRM]`:
@@ -185,7 +260,8 @@ Search the codebase for `[CONFIRM]`:
    subscribers, site details
 5. ✅ Edge Functions: newsletter send, enquiry notification, double opt-in
    confirmation, unsubscribe
-6. Netlify deploy + DNS and Resend verification
+6. Netlify deploy — config, headers and CSP done and verified against the
+   real production build; connecting the repo needs an account login
 
 ## Edge Functions
 
