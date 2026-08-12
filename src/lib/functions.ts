@@ -13,7 +13,8 @@ function endpoint(name: string): string {
 
 /** Signs someone up and triggers the confirmation email. */
 export async function requestSubscribe(email: string): Promise<{ ok: boolean }> {
-  if (!hasFunctions) return { ok: true }
+  // As with insertRow: report failure rather than a false success.
+  if (!hasFunctions) return { ok: false }
   try {
     const res = await fetch(endpoint('subscribe'), {
       method: 'POST',

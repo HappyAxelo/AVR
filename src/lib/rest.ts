@@ -82,7 +82,9 @@ export interface InsertResult {
  * generates one with `newId()` and includes it in the payload.
  */
 export async function insertRow(table: string, row: unknown): Promise<InsertResult> {
-  if (!hasSupabase) return { ok: true }
+  // Never report success with no backend: a "thank you" over a discarded
+  // enquiry is worse than an honest error asking the visitor to phone.
+  if (!hasSupabase) return { ok: false }
   try {
     const res = await fetch(`${URL_BASE}/rest/v1/${table}`, {
       method: 'POST',
