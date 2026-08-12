@@ -1,21 +1,18 @@
-// Fails the build when the Supabase environment variables are missing.
+// Checks the Supabase configuration before every build.
 //
-// Without this, Vite happily compiles `import.meta.env.VITE_SUPABASE_URL`
-// down to undefined and ships a site that looks fine but cannot reach the
-// database: news falls back to built-in content, the admin panel cannot log
-// in, and — worst of all — the contact form reports success while discarding
-// the enquiry. A build that fails loudly is far better than a deploy that
-// fails silently.
-//
-// Set ALLOW_MISSING_SUPABASE=1 to build without it on purpose.
+// Frontend config can come from two places: environment variables (preferred,
+// e.g. Netlify) or the committed public values in src/config/public.ts. This
+// script confirms at least one supplies both values, and — more importantly —
+// refuses to build if a service-role key has been put where the publishable
+// key belongs, which would hand every visitor a key that bypasses row-level
+// security.
 
 import { readFileSync, existsSync } from 'node:fs'
 
 const REQUIRED = ['VITE_SUPABASE_URL', 'VITE_SUPABASE_ANON_KEY']
 
 // Vite reads .env files itself, so a plain Node script has to do the same or
-// it would reject a perfectly good local setup. Real environment variables
-// (how Netlify supplies them) always win.
+// it would reject a perfectly good local setup.
 function loadDotEnv() {
   const values = {}
   for (const file of ['.env', '.env.local', '.env.production']) {
@@ -29,10 +26,38 @@ function loadDotEnv() {
   return values
 }
 
-const fromFiles = loadDotEnv()
-const read = (name) => (process.env[name] ?? fromFiles[name] ?? '').trim()
+/** The committed fallback in src/config/public.ts. */
+function loadCommittedConfig() {
+  const path = 'src/config/public.ts'
+  if (!existsSync(path)) return {}
+  const src = readFileSync(path, 'utf8')
+  const grab = (name) => src.match(new RegExp(`${name}\\s*=\\s*['"]([^'"]+)['"]`))?.[1] ?? ''
+  return {
+    VITE_SUPABASE_URL: grab('PUBLIC_SUPABASE_URL'),
+    VITE_SUPABASE_ANON_KEY: grab('PUBLIC_SUPABASE_ANON_KEY'),
+  }
+}
 
-const missing = REQUIRED.filter((name) => !read(name))
+const fromFiles = loadDotEnv()
+const committed = loadCommittedConfig()
+
+const readEnv = (name) => (process.env[name] ?? fromFiles[name] ?? '').trim()
+const effective = (name) => readEnv(name) || (committed[name] ?? '').trim()
+
+// A service-role key must never be compiled into the browser bundle.
+for (const name of REQUIRED) {
+  const value = effective(name)
+  if (value.includes('service_role') || value.startsWith('sb_secret_')) {
+    console.error(
+      `\nBUILD STOPPED — ${name} looks like a SERVICE ROLE key.\n` +
+        'That key bypasses row-level security and would be shipped to every\n' +
+        'visitor. Use the publishable/anon key instead.\n',
+    )
+    process.exit(1)
+  }
+}
+
+const missing = REQUIRED.filter((name) => !effective(name))
 
 if (missing.length && !process.env.ALLOW_MISSING_SUPABASE) {
   console.error(`
@@ -45,18 +70,17 @@ Missing: ${missing.join(', ')}
 Building without these produces a site that LOOKS fine but:
   • the admin panel cannot sign in
   • news and projects silently show built-in placeholder content
-  • the contact form says "thank you" and throws the enquiry away
+  • the contact form reports an error on every submission
 
-To fix:
-  • Netlify  → Site configuration → Environment variables
-  • Locally  → copy .env.example to .env and fill it in
+Set them either in src/config/public.ts (publishable values only) or as
+environment variables:
 
   VITE_SUPABASE_URL       https://<project-ref>.supabase.co
   VITE_SUPABASE_ANON_KEY  the publishable key from
                           Supabase → Settings → API Keys
 
-Only these two belong in the frontend. The service-role and Resend keys
-are Edge Function secrets and must never be set here.
+The service-role and Resend keys are Edge Function secrets and must never
+be set here.
 
 To build anyway (a static preview with no backend):
   ALLOW_MISSING_SUPABASE=1 npm run build
@@ -65,19 +89,8 @@ To build anyway (a static preview with no backend):
 }
 
 if (missing.length) {
-  console.warn(`⚠  Building WITHOUT Supabase (${missing.join(', ')} unset). Backend features will not work.`)
+  console.warn(`⚠  Building WITHOUT Supabase (${missing.join(', ')}). Backend features will not work.`)
 } else {
-  const url = read('VITE_SUPABASE_URL')
-  const key = read('VITE_SUPABASE_ANON_KEY')
-
-  // A service-role key here would be handed to every visitor.
-  if (key.includes('service_role') || key.startsWith('sb_secret_')) {
-    console.error(
-      '\nBUILD STOPPED — VITE_SUPABASE_ANON_KEY looks like a SERVICE ROLE key.\n' +
-        'That key bypasses row-level security and would be shipped to every\n' +
-        'visitor. Use the publishable/anon key instead.\n',
-    )
-    process.exit(1)
-  }
-  console.log(`✓ Supabase configured: ${url}`)
+  const source = readEnv('VITE_SUPABASE_URL') ? 'environment variables' : 'src/config/public.ts'
+  console.log(`✓ Supabase configured from ${source}: ${effective('VITE_SUPABASE_URL')}`)
 }

@@ -6,8 +6,12 @@
 // stays in the lazy-loaded admin chunk. RLS is what protects the data
 // either way; the anon key is public by design.
 
-const URL_BASE = import.meta.env.VITE_SUPABASE_URL
-const ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY
+import { PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY } from '../config/public'
+
+// Environment variables win when set; the committed public config is the
+// fallback so a deploy can never ship with no backend. See src/config/public.ts.
+const URL_BASE = import.meta.env.VITE_SUPABASE_URL || PUBLIC_SUPABASE_URL
+const ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY || PUBLIC_SUPABASE_ANON_KEY
 
 export const hasSupabase = Boolean(URL_BASE && ANON_KEY)
 

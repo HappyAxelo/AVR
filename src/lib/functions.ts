@@ -2,8 +2,10 @@
 // These endpoints are anonymous by design; each one validates its own input
 // server-side (see supabase/functions/*/index.ts).
 
-const URL_BASE = import.meta.env.VITE_SUPABASE_URL
-const ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY
+import { PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY } from '../config/public'
+
+const URL_BASE = import.meta.env.VITE_SUPABASE_URL || PUBLIC_SUPABASE_URL
+const ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY || PUBLIC_SUPABASE_ANON_KEY
 
 export const hasFunctions = Boolean(URL_BASE && ANON_KEY)
 
